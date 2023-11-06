@@ -1,5 +1,5 @@
+import { UpdateUserService } from '../services/index.js';
 import { EmailAlreadyInUseError } from '../errors/user.js';
-import { UpdateUserService } from '../services/update-user.js';
 import {
     checkIfEmailIsValid,
     checkIfIdIsValid,
@@ -17,7 +17,7 @@ export class UpdateUserController {
         try {
             const userId = httpRequest.params.userId;
 
-            const isIdValid = checkIfIdIsValid();
+            const isIdValid = checkIfIdIsValid(userId);
 
             if (!isIdValid) {
                 return invalidIdResponse();
@@ -32,11 +32,11 @@ export class UpdateUserController {
                 'password',
             ];
 
-            const someFieldsIsNotAllowed = Object.keys(params).some(
+            const someFieldIsNotAllowed = Object.keys(params).some(
                 (field) => !allowedFields.includes(field)
             );
 
-            if (someFieldsIsNotAllowed) {
+            if (someFieldIsNotAllowed) {
                 return badRequest({
                     message: 'Some provided field is not allowed.',
                 });
@@ -50,10 +50,12 @@ export class UpdateUserController {
                 }
             }
 
-            const emailIsValid = checkIfEmailIsValid();
+            if (params.email) {
+                const emailIsValid = checkIfEmailIsValid(params.email);
 
-            if (!emailIsValid) {
-                return emailIsAlreadyInUseResponse(params.email);
+                if (!emailIsValid) {
+                    return emailIsAlreadyInUseResponse();
+                }
             }
 
             const updateUserService = new UpdateUserService();
@@ -66,7 +68,7 @@ export class UpdateUserController {
                 return badRequest({ message: error.message });
             }
 
-            console.log(error);
+            console.error(error);
             return serverError();
         }
     }
