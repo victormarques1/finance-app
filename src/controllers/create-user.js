@@ -1,5 +1,4 @@
 import { EmailAlreadyInUseError } from '../errors/user.js';
-import { CreateUserService } from '../services/create-user.js';
 import {
     checkIfEmailIsValid,
     checkIfPasswordIsValid,
@@ -11,6 +10,10 @@ import {
 } from './helpers/index.js';
 
 export class CreateUserController {
+    constructor(createUserService) {
+        this.createUserService = createUserService;
+    }
+
     async execute(httpRequest) {
         try {
             const params = httpRequest.body;
@@ -40,15 +43,14 @@ export class CreateUserController {
                 return emailIsAlreadyInUseResponse();
             }
 
-            const createUserService = new CreateUserService();
-
-            const createdUser = await createUserService.execute(params);
+            const createdUser = await this.createUserService.execute(params);
 
             return created(createdUser);
         } catch (error) {
             if (error instanceof EmailAlreadyInUseError) {
                 return badRequest({ message: error.message });
             }
+
             console.error(error);
             return serverError();
         }

@@ -1,26 +1,25 @@
-import { GetUserByIdService } from '../services/get-user-by-id.js';
 import {
     checkIfIdIsValid,
     invalidIdResponse,
+    userNotFoundResponse,
     ok,
     serverError,
-    userNotFoundResponse,
 } from './helpers/index.js';
 
 export class GetUserByIdController {
+    constructor(getUserByIdService) {
+        this.getUserByIdService = getUserByIdService;
+    }
+
     async execute(httpRequest) {
         try {
-            const userId = httpRequest.params.userId;
-
-            const isIdValid = checkIfIdIsValid(userId);
+            const isIdValid = checkIfIdIsValid(httpRequest.params.userId);
 
             if (!isIdValid) {
                 return invalidIdResponse();
             }
 
-            const getUserByIdService = new GetUserByIdService();
-
-            const user = await getUserByIdService.execute(
+            const user = await this.getUserByIdService.execute(
                 httpRequest.params.userId
             );
 
@@ -30,7 +29,7 @@ export class GetUserByIdController {
 
             return ok(user);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return serverError();
         }
     }
