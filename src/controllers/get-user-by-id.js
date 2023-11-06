@@ -1,6 +1,11 @@
-import { notFound, ok, serverError } from './helpers/http.js';
 import { GetUserByIdService } from '../services/get-user-by-id.js';
-import { checkIfIdIsValid, invalidIdResponse } from './helpers/user.js';
+import {
+    checkIfIdIsValid,
+    invalidIdResponse,
+    notFound,
+    ok,
+    serverError,
+} from './helpers/index.js';
 
 export class GetUserByIdController {
     async execute(httpRequest) {
