@@ -17,6 +17,10 @@ export class UpdateUserService {
             if (userWithProvidedEmail) {
                 throw new EmailAlreadyInUseError(updateUserParams.email);
             }
+
+            if (userWithProvidedEmail && userWithProvidedEmail.id !== userId) {
+                throw new EmailAlreadyInUseError(updateUserParams.email);
+            }
         }
 
         const user = {
