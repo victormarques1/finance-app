@@ -4,6 +4,7 @@ import {
     PostgresCreateTransactionRepository,
     PostgresGetUserByIdRepository,
 } from '../../repositories/postgres/index.js';
+import { CreateTransactionService } from '../../services/index.js';
 
 export const makeCreateTransactionController = () => {
     const createTransactionRepository =
@@ -11,7 +12,7 @@ export const makeCreateTransactionController = () => {
 
     const getUserByIdRepository = new PostgresGetUserByIdRepository();
 
-    const createTransactionService = new createTransactionService(
+    const createTransactionService = new CreateTransactionService(
         createTransactionRepository,
         getUserByIdRepository
     );
