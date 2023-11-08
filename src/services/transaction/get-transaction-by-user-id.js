@@ -8,14 +8,12 @@ export class GetTransactionsByUserIdService {
     }
 
     async execute(params) {
-        //validar se o usuario existe
         const user = await this.getUserByIdRepository.execute(params.userId);
 
         if (!user) {
             throw new UserNotFoundError(params.userId);
         }
 
-        //chamar repository
         const transactions =
             await this.getTransactionsByUserIdRepository.execute(params.userId);
 
