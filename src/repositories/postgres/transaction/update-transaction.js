@@ -19,11 +19,11 @@ export class PostgresUpdateTransactionRepository {
             RETURNING *
         `;
 
-        const updatedTransaction = await PostgresHelper.query(
+        const updatedUser = await PostgresHelper.query(
             updateQuery,
             updateValues
         );
 
-        return updatedTransaction[0];
+        return updatedUser[0];
     }
 }

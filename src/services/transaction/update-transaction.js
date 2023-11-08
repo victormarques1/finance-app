@@ -4,10 +4,10 @@ export class UpdateTransactionService {
     }
 
     async execute(transactionId, params) {
-        const transaction = await this.updateTransactionRepository.execute({
+        const transaction = await this.updateTransactionRepository.execute(
             transactionId,
-            params,
-        });
+            params
+        );
 
         return transaction;
     }
