@@ -3,6 +3,7 @@ import {
     invalidIdResponse,
     ok,
     serverError,
+    transactionNotFoundResponse,
 } from '../helpers/index.js';
 
 export class DeleteTransactionController {
@@ -23,6 +24,10 @@ export class DeleteTransactionController {
             const transaction = await this.deleteTransactionService.execute(
                 httpRequest.params.transactionId
             );
+
+            if (!transaction) {
+                return transactionNotFoundResponse();
+            }
 
             return ok(transaction);
         } catch (error) {
