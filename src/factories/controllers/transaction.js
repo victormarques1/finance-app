@@ -1,10 +1,17 @@
-import { CreateTransactionController } from '../../controllers/transaction/create-transaction.js';
+import {
+    CreateTransactionController,
+    GetTransactionsByUserIdController,
+} from '../../controllers/index.js';
 
 import {
     PostgresCreateTransactionRepository,
     PostgresGetUserByIdRepository,
+    PostgresGetTransactionsByUserIdRepository,
 } from '../../repositories/postgres/index.js';
-import { CreateTransactionService } from '../../services/index.js';
+import {
+    CreateTransactionService,
+    GetTransactionsByUserIdService,
+} from '../../services/index.js';
 
 export const makeCreateTransactionController = () => {
     const createTransactionRepository =
@@ -22,4 +29,21 @@ export const makeCreateTransactionController = () => {
     );
 
     return createTransactionController;
+};
+
+export const makeGetTransactionsByUserIdController = () => {
+    const getTransactionsByUserIdRepository =
+        new PostgresGetTransactionsByUserIdRepository();
+
+    const getUserByIdRepository = new PostgresGetUserByIdRepository();
+
+    const getTransactionsByUserIdService = new GetTransactionsByUserIdService(
+        getTransactionsByUserIdRepository,
+        getUserByIdRepository
+    );
+
+    const getTransactionsByUserIdController =
+        new GetTransactionsByUserIdController(getTransactionsByUserIdService);
+
+    return getTransactionsByUserIdController;
 };
